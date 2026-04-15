@@ -1,3 +1,9 @@
 spring:
   application:
     name: PaymentService
+  data:
+    mongodb:
+      port: ${MONGODB_PORT}
+      host: ${MONGODB_HOST}
+      database: ${COLLECTION_NAME}
+      auto-index-creation: true
