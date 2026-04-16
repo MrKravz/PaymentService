@@ -16,18 +16,18 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Document("payment")
+@Document(collection = "payment_collection")
 @Accessors(chain = true)
 public class Payment {
 
     @Id
     private Long id;
 
-    @Indexed
+    @Indexed(unique = true)
     @Field(name = "order_id")
     private Long orderId;
 
-    @Indexed(unique = true)
+    @Indexed
     @Field(name = "user_id")
     private Long userId;
 
@@ -39,6 +39,5 @@ public class Payment {
 
     @Field(name = "payment_amount")
     private Long paymentAmount;
-
 
 }

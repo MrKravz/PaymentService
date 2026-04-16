@@ -1,9 +1,14 @@
-package by.ares.paymentservice.service;
+package by.ares.paymentservice.service.impl;
+
+import by.ares.paymentservice.service.EventListener;
+import by.ares.paymentservice.service.EventManager;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractEventManager<T> implements EventManager<T> {
+@Service
+public class EventManagerImpl<T> implements EventManager<T> {
 
     private List<EventListener<T>> eventListeners = new ArrayList<>();
 
@@ -19,7 +24,7 @@ public abstract class AbstractEventManager<T> implements EventManager<T> {
 
     @Override
     public void notify(T t) {
-        eventListeners.forEach(x -> x.perform(t));
+        eventListeners.forEach(x -> x.invoke(t));
     }
 
 }

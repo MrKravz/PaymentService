@@ -5,5 +5,15 @@ spring:
     mongodb:
       port: ${MONGODB_PORT}
       host: ${MONGODB_HOST}
-      database: ${COLLECTION_NAME}
       auto-index-creation: true
+  kafka:
+    bootstrap-servers: localhost:9093
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      properties:
+        spring:
+          json:
+            add:
+              type:
+                headers: false

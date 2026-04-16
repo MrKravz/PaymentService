@@ -21,41 +21,40 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @GetMapping
-    public ResponseEntity<Page<PaymentDto>> findByStatus(@PageableDefault Pageable pageable,
-                                                         @RequestParam Status status) {
+    @GetMapping("/search/by-status")
+    public ResponseEntity<Page<PaymentDto>> getPaymentByOrderId(@PageableDefault Pageable pageable,
+                                                                @RequestParam Status status) {
         return ResponseEntity.ok(paymentService.findByStatus(pageable, status));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<Page<PaymentDto>> findByUserId(@PageableDefault Pageable pageable,
-                                                         @PathVariable Long userId) {
+    @GetMapping("/search/by-user")
+    public ResponseEntity<Page<PaymentDto>> getPaymentByUserId(@PageableDefault Pageable pageable,
+                                                               @RequestParam Long userId) {
         return ResponseEntity.ok(paymentService.findByUserId(pageable, userId));
     }
 
-    @GetMapping
-    public ResponseEntity<PaymentDto> findByOrderId(@PathVariable Long orderId) { // TODO refactor controller
+    @GetMapping("/search/by-order")
+    public ResponseEntity<PaymentDto> getPaymentByOrderId(@RequestParam Long orderId) {
         return ResponseEntity.ok(paymentService.findByOrderId(orderId));
     }
 
-    @GetMapping
-    public ResponseEntity<Long> totalSum(@ModelAttribute DateRangeRequest dateRangeRequest) { // TODO refactor controller
+    @GetMapping("/statistics/total")
+    public ResponseEntity<Long> getTotalPaymentsSum(@ModelAttribute DateRangeRequest dateRangeRequest) {
         return ResponseEntity.ok(paymentService.totalSum(dateRangeRequest));
     }
 
-    @GetMapping
-    public ResponseEntity<Long> totalSum(@ModelAttribute DateRangeRequest dateRangeRequest,
-                                         @PathVariable Long userId) {
+    @GetMapping("/statistics/total/{userId}")
+    public ResponseEntity<Long> getTotalPaymentsSumForUser(
+            @ModelAttribute DateRangeRequest dateRangeRequest,
+            @PathVariable Long userId) {
         return ResponseEntity.ok(paymentService.totalSum(dateRangeRequest, userId));
     }
 
     @PostMapping
-    public ResponseEntity<PaymentDto> save(@Valid @RequestBody PaymentRequest paymentRequest) {
+    public ResponseEntity<PaymentDto> createPayment(@Valid @RequestBody PaymentRequest paymentRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(paymentService.save(paymentRequest));
     }
-
-
 
 }
