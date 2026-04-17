@@ -1,36 +1,41 @@
 package by.ares.paymentservice.repository;
 
-import by.ares.paymentservice.dto.request.DateRangeRequest;
 import by.ares.paymentservice.model.Payment;
 import by.ares.paymentservice.model.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface PaymentRepository extends MongoRepository<Payment, Long> {
-    @Query("{ 'userId' : ?1 }")
+    @Query("{ 'userId' : ?0 }")
     Page<Payment> findAllByUserId(Pageable pageable, Long userId);
-    @Query("{ 'status' : ?1 }")
+    @Query("{ 'status' : ?0 }")
     Page<Payment> findAllByStatus(Pageable pageable, Status status);
     @Query("{ 'orderId' : ?0 }")
-    Optional<Payment> findByOrderId(Long orderId);
+    Page<Payment> findAllByOrderId(Pageable pageable, Long orderId);
 
     @Aggregation(pipeline = {
-            "{ $match: { userId: ?1, actionTime: { $gte: ?0.start, $lte: ?0.end } } }",
-            "{ $group: { _id: null, total: { $sum: '$paymentAmount' } } }"
+            "{ $match: { timestamp: { $gte: ?0, $lte: ?1 } } }"
     })
-    Long totalSum(DateRangeRequest dateRangeRequest, Long userId);
+    List<Payment> total(Date start, Date end);
 
     @Aggregation(pipeline = {
-            "{ $match: { actionTime: { $gte: ?0.start, $lte: ?0.end } } }",
-            "{ $group: { _id: null, total: { $sum: '$paymentAmount' } } }"
+            "{ $match: { user_id: ?2, timestamp: { $gte: ?0, $lte: ?1 } } }",
+            "{ $group: { _id: null, total: { $sum: '$payment_amount' } } }"
     })
-    Long totalSum(DateRangeRequest dateRangeRequest);
+    Long totalSum(LocalDate start, LocalDate end, Long userId);
+
+    @Aggregation(pipeline = {
+            "{ $match: { timestamp: { $gte: ?0, $lte: ?1 } } }",
+            "{ $group: { _id: null, total: { $sum: '$payment_amount' } } }"
+    })
+    Long totalSum(LocalDate start, LocalDate end);
 }

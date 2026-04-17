@@ -4,7 +4,6 @@ import by.ares.paymentservice.dto.request.OrderStatusRequest;
 import by.ares.paymentservice.dto.request.PaymentRequest;
 import by.ares.paymentservice.exception.ExceptionResponse;
 import by.ares.paymentservice.exception.ExternalApiException;
-import by.ares.paymentservice.exception.PaymentFailedException;
 import by.ares.paymentservice.exception.ResponseParseException;
 import by.ares.paymentservice.model.Status;
 import by.ares.paymentservice.service.EventListener;
@@ -43,28 +42,24 @@ public class ExternalApiServiceImpl implements ExternalApiService {
 
     @Override
     public Status performPayment(PaymentRequest paymentRequest) {
-        var paymentStatus = restClient.put()
+        var paymentStatus = restClient.get()
                 .uri(uri)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, (req, res) -> {
                     ExceptionResponse error;
                     try (InputStream is = res.getBody()) {
                         if (is == null) {
-                            throw new ResponseParseException("Empty response from user-service");
+                            throw new ResponseParseException("Empty response from payment service");
                         }
                         error = objectMapper.readValue(is, ExceptionResponse.class);
                     } catch (IOException e) {
                         throw new ResponseParseException(RESPONSE_PARSE_MESSAGE);
                     }
-
                     throw new ExternalApiException(error.getMessage());
                 })
                 .body(Long.class);
         final Status status = paymentStatus % 2 == 0 ? Status.SUCCESS : Status.FAILED;
         eventManager.notify(new OrderStatusRequest(paymentRequest.getOrderId(), status));
-        if (status.equals(Status.FAILED)) {
-            throw new PaymentFailedException("Payment has been failed");
-        }
         return status;
     }
 }

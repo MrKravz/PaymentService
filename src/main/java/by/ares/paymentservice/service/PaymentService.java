@@ -9,6 +9,6 @@ import org.springframework.data.domain.Pageable;
 public interface PaymentService extends StatService {
     Page<PaymentDto> findByUserId(Pageable pageable, Long userId);
     Page<PaymentDto> findByStatus(Pageable pageable, Status status);
-    PaymentDto findByOrderId(Long orderId);
+    Page<PaymentDto> findByOrderId(Pageable pageable, Long orderId);
     PaymentDto save(PaymentRequest paymentRequest);
 }

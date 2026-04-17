@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -21,9 +21,9 @@ import java.time.LocalDateTime;
 public class Payment {
 
     @Id
-    private Long id;
+    private String id;
 
-    @Indexed(unique = true)
+    @Indexed
     @Field(name = "order_id")
     private Long orderId;
 
@@ -35,7 +35,7 @@ public class Payment {
     private Status status;
 
     @Field(name = "timestamp")
-    private LocalDateTime timestamp;
+    private LocalDate timestamp;
 
     @Field(name = "payment_amount")
     private Long paymentAmount;

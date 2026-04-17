@@ -34,8 +34,9 @@ public class PaymentController {
     }
 
     @GetMapping("/search/by-order")
-    public ResponseEntity<PaymentDto> getPaymentByOrderId(@RequestParam Long orderId) {
-        return ResponseEntity.ok(paymentService.findByOrderId(orderId));
+    public ResponseEntity<Page<PaymentDto>> getPaymentByOrderId(@PageableDefault Pageable pageable,
+                                                                @RequestParam Long orderId) {
+        return ResponseEntity.ok(paymentService.findByOrderId(pageable, orderId));
     }
 
     @GetMapping("/statistics/total")
@@ -44,9 +45,8 @@ public class PaymentController {
     }
 
     @GetMapping("/statistics/total/{userId}")
-    public ResponseEntity<Long> getTotalPaymentsSumForUser(
-            @ModelAttribute DateRangeRequest dateRangeRequest,
-            @PathVariable Long userId) {
+    public ResponseEntity<Long> getTotalPaymentsSumForUser(@ModelAttribute DateRangeRequest dateRangeRequest,
+                                                           @PathVariable Long userId) {
         return ResponseEntity.ok(paymentService.totalSum(dateRangeRequest, userId));
     }
 
