@@ -1,5 +1,6 @@
 package by.ares.paymentservice;
 
+import by.ares.paymentservice.config.TestcontainersConfiguration;
 import org.springframework.boot.SpringApplication;
 
 public class TestPaymentServiceApplication {

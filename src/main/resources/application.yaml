@@ -19,3 +19,6 @@ spring:
             add:
               type:
                 headers: false
+api:
+  user:
+    uri: ${EXTERNAL_SERVICE_URL:}

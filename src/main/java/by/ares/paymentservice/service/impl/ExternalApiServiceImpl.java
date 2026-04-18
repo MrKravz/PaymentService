@@ -32,7 +32,7 @@ public class ExternalApiServiceImpl implements ExternalApiService {
     public ExternalApiServiceImpl(EventManager<OrderStatusRequest> eventManager,
                                   EventListener<OrderStatusRequest> eventListener,
                                   ObjectMapper objectMapper, RestClient restClient,
-                                  @Value("${ORDER_SERVICE_URL}") String uri) {
+                                  @Value("${api.user.uri}") String uri) {
         this.restClient = restClient;
         this.objectMapper = objectMapper;
         this.eventManager = eventManager;
