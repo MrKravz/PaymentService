@@ -1,5 +1,6 @@
 package by.ares.paymentservice.config;
 
+import by.ares.paymentservice.model.Role;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +31,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers("/search/by-status", "/search/by-order", "/statistics")
+                        .hasRole(Role.ADMIN.toString())
+                        .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtConfigurer -> jwtAuthenticationConverter()))
