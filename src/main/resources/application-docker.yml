@@ -1,24 +1,21 @@
 server:
   port: 8084
+
 spring:
   application:
     name: PaymentService
-  data:
-    mongodb:
-      port: ${MONGODB_PORT}
-      host: ${MONGODB_HOST}
-      auto-index-creation: true
+
+  mongodb:
+    uri: ${DOCKER_SPRING_MONGODB_URI:}
+
   kafka:
-    bootstrap-servers: localhost:9093
+    bootstrap-servers: ${DOCKER_KAFKA_BOOTSTRAP_SERVERS:}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
       properties:
-        spring:
-          json:
-            add:
-              type:
-                headers: false
+        spring.json.add.type.headers: false
+
 api:
   user:
-    uri: ${EXTERNAL_SERVICE_URL:}
+    uri: ${DOCKER_EXTERNAL_SERVICE_URL:}
