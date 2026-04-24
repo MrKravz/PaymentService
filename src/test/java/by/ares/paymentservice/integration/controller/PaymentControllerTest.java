@@ -25,11 +25,10 @@ class PaymentControllerTest extends AbstractIntegrationTest {
     @Autowired
     public PaymentRepository paymentRepository;
 
-    private Payment payment;
 
     @BeforeEach
     void init() {
-        payment = saveTestItem();
+        saveTestItem();
     }
 
     private Payment saveTestItem() {

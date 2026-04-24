@@ -29,7 +29,6 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-service:2181
-      # Явное объявление протоколов для слушателей
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
@@ -63,7 +62,7 @@ services:
       mongodb:
         condition: service_started
       kafka:
-        condition: service_healthy          # ждём готовности Kafka
+        condition: service_healthy
       bank-mock-service:
         condition: service_started
     ports:
