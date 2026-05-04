@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bank-mock-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bank-mock-service
+  template:
+    metadata:
+      labels:
+        app: bank-mock-service
+    spec:
+      containers:
+        - name: bank-mock-service
+          image: bank-mock-service:1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8085
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8085
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8085
+            initialDelaySeconds: 60
+            periodSeconds: 15
