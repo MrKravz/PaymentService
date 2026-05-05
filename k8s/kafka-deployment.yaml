@@ -72,11 +72,10 @@ spec:
             - sh
             - -c
             - |
-              until nc -z zookeeper 2181; do
-                echo waiting for zk;
+              until nc -w 2 -z zookeeper 2181; do
+                echo waiting for zookeeper;
                 sleep 2;
-              done;
-
+              done
       containers:
         - name: kafka
           image: confluentinc/cp-kafka:7.4.0
@@ -109,6 +108,22 @@ spec:
           volumeMounts:
             - name: kafka-data
               mountPath: /var/lib/kafka/data
+          startupProbe:
+            tcpSocket:
+              port: 9092
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            failureThreshold: 15
+          livenessProbe:
+            tcpSocket:
+              port: 9092
+            periodSeconds: 30
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 9092
+            periodSeconds: 10
+            failureThreshold: 3
       volumes:
         - name: kafka-data
           emptyDir: {}
