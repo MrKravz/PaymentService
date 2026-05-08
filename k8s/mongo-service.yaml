@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-mongodb
+spec:
+  selector:
+    app: payment-mongodb
+  ports:
+    - port: 27017
