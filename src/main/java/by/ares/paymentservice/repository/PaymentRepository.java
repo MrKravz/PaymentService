@@ -10,22 +10,15 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 
 @Repository
-public interface PaymentRepository extends MongoRepository<Payment, Long> {
+public interface PaymentRepository extends MongoRepository<Payment, String> {
     @Query("{ 'userId' : ?0 }")
     Page<Payment> findAllByUserId(Pageable pageable, Long userId);
     @Query("{ 'status' : ?0 }")
     Page<Payment> findAllByStatus(Pageable pageable, Status status);
     @Query("{ 'orderId' : ?0 }")
     Page<Payment> findAllByOrderId(Pageable pageable, Long orderId);
-
-    @Aggregation(pipeline = {
-            "{ $match: { timestamp: { $gte: ?0, $lte: ?1 } } }"
-    })
-    List<Payment> total(Date start, Date end);
 
     @Aggregation(pipeline = {
             "{ $match: { user_id: ?2, timestamp: { $gte: ?0, $lte: ?1 } } }",

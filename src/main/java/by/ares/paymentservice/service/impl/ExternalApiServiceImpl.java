@@ -1,14 +1,12 @@
 package by.ares.paymentservice.service.impl;
 
-import by.ares.paymentservice.dto.request.OrderStatusRequest;
 import by.ares.paymentservice.dto.request.PaymentRequest;
 import by.ares.paymentservice.exception.ExceptionResponse;
 import by.ares.paymentservice.exception.ExternalApiException;
 import by.ares.paymentservice.exception.ResponseParseException;
 import by.ares.paymentservice.model.Status;
-import by.ares.paymentservice.service.EventListener;
-import by.ares.paymentservice.service.EventManager;
 import by.ares.paymentservice.service.ExternalApiService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -21,24 +19,14 @@ import java.io.InputStream;
 import static by.ares.paymentservice.util.PaymentServiceConstants.RESPONSE_PARSE_MESSAGE;
 
 @Service
+@RequiredArgsConstructor
 public class ExternalApiServiceImpl implements ExternalApiService {
 
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
-    private final EventManager<OrderStatusRequest> eventManager;
 
+    @Value("${api.user.uri}")
     private String uri;
-
-    public ExternalApiServiceImpl(EventManager<OrderStatusRequest> eventManager,
-                                  EventListener<OrderStatusRequest> eventListener,
-                                  ObjectMapper objectMapper, RestClient restClient,
-                                  @Value("${api.user.uri}") String uri) {
-        this.restClient = restClient;
-        this.objectMapper = objectMapper;
-        this.eventManager = eventManager;
-        this.uri = uri;
-        this.eventManager.subscribe(eventListener);
-    }
 
     @Override
     public Status performPayment(PaymentRequest paymentRequest) {
@@ -58,8 +46,6 @@ public class ExternalApiServiceImpl implements ExternalApiService {
                     throw new ExternalApiException(error.getMessage());
                 })
                 .body(Long.class);
-        final Status status = paymentStatus % 2 == 0 ? Status.SUCCESS : Status.FAILED;
-        eventManager.notify(new OrderStatusRequest(paymentRequest.getOrderId(), status));
-        return status;
+        return paymentStatus % 2 == 0 ? Status.SUCCESS : Status.FAILED;
     }
 }

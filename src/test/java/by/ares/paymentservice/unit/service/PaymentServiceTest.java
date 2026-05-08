@@ -1,12 +1,14 @@
 package by.ares.paymentservice.unit.service;
 
 import by.ares.paymentservice.dto.request.DateRangeRequest;
+import by.ares.paymentservice.dto.request.OrderStatusRequest;
 import by.ares.paymentservice.dto.request.PaymentRequest;
 import by.ares.paymentservice.dto.response.PaymentDto;
 import by.ares.paymentservice.mapper.PaymentMapper;
 import by.ares.paymentservice.model.Payment;
 import by.ares.paymentservice.model.Status;
 import by.ares.paymentservice.repository.PaymentRepository;
+import by.ares.paymentservice.service.EventManager;
 import by.ares.paymentservice.service.ExternalApiService;
 import by.ares.paymentservice.service.impl.PaymentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +36,8 @@ class PaymentServiceTest {
 
     @Mock
     private PaymentRepository paymentRepository;
+    @Mock
+    private EventManager<OrderStatusRequest> eventManager;
     @Mock
     private PaymentMapper paymentMapper;
     @Mock

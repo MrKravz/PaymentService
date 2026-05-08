@@ -32,7 +32,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/search/by-status", "/search/by-order", "/statistics")
+                        .requestMatchers("payments/search/by-status", "payments/search/by-order", "payments/statistics")
                         .hasRole(Role.ADMIN.toString())
                         .anyRequest().authenticated()
                 )

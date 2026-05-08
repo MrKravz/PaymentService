@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "payment_collection")
+@Document(collection = "payments")
 @Accessors(chain = true)
 public class Payment {
 

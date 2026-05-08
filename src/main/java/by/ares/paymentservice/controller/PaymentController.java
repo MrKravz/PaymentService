@@ -25,7 +25,7 @@ public class PaymentController {
 
     @GetMapping("/search/by-status")
     public ResponseEntity<Page<PaymentDto>> findPaymentByStatus(@PageableDefault Pageable pageable,
-                                                                @RequestParam Status status) { // admin
+                                                                @RequestParam Status status) {
         return ResponseEntity.ok(paymentService.findByStatus(pageable, status));
     }
 
@@ -40,12 +40,12 @@ public class PaymentController {
 
     @GetMapping("/search/by-order")
     public ResponseEntity<Page<PaymentDto>> findPaymentByOrderId(@PageableDefault Pageable pageable,
-                                                                 @RequestParam Long orderId) { // admin
+                                                                 @RequestParam Long orderId) {
         return ResponseEntity.ok(paymentService.findByOrderId(pageable, orderId));
     }
 
     @GetMapping("/statistics")
-    public ResponseEntity<Long> findTotalPaymentsSum(@ModelAttribute DateRangeRequest dateRangeRequest) { // admin
+    public ResponseEntity<Long> findTotalPaymentsSum(@ModelAttribute DateRangeRequest dateRangeRequest) {
         return ResponseEntity.ok(paymentService.totalSum(dateRangeRequest));
     }
 
@@ -53,15 +53,15 @@ public class PaymentController {
     public ResponseEntity<Long> findTotalPaymentsSumByUserId(@ModelAttribute DateRangeRequest dateRangeRequest,
                                                              @PathVariable(name = "userId") Long id,
                                                              @RequestHeader("X-User-Id") Long userId,
-                                                             @RequestHeader("X-User-Role") String role) { // user or admin
+                                                             @RequestHeader("X-User-Role") String role) {
         securityValidationService.validateAccess(id, userId, role);
-        return ResponseEntity.ok(paymentService.totalSum(dateRangeRequest, userId));
+        return ResponseEntity.ok(paymentService.totalSum(dateRangeRequest, id));
     }
 
     @PostMapping
     public ResponseEntity<PaymentDto> savePayment(@Valid @RequestBody PaymentRequest paymentRequest,
                                                   @RequestHeader("X-User-Id") Long userId,
-                                                  @RequestHeader("X-User-Role") String role) { // user or admin
+                                                  @RequestHeader("X-User-Role") String role) {
         securityValidationService.validateAccess(paymentRequest.getUserId(), userId, role);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
