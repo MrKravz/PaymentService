@@ -47,6 +47,11 @@ spec:
                 secretKeyRef:
                   name: app-secrets
                   key: USER_SERVICE_URL
+            - name: DOCKER_EXTERNAL_SERVICE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: DOCKER_EXTERNAL_SERVICE_URL
             - name: DOCKER_KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 secretKeyRef:

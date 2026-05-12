@@ -4,6 +4,6 @@ metadata:
   name: bank-service
 spec:
   selector:
-    app: bank-service
+    app: bank-mock-service
   ports:
     - port: 8085
